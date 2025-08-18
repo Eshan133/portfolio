@@ -13,13 +13,13 @@ interface ChatMessage {
 
 export default function ChatbotWidget() {
   const { toast } = useToast();
-  const [webhookUrl, setWebhookUrl] = useState("");
+  const [webhookUrl, setWebhookUrl] = useState("https://ishan2121066.app.n8n.cloud/webhook-test/c68494dc-137d-4d9c-bbbd-af5807862e24");
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
       content:
-        "Hi! I'm your AI/ML assistant. Ask anything about projects, experience, or leave a message. Connect an n8n webhook to route messages.",
+        "Hi! I'm your AI/ML assistant. Ask me anything about projects, experience, or any other questions you have!",
     },
   ]);
   const [input, setInput] = useState("");
@@ -53,11 +53,20 @@ export default function ChatbotWidget() {
     }
 
     pendingRef.current = true;
+    
+    // Add a temporary "typing" indicator
+    setMessages((m) => [
+      ...m,
+      {
+        role: "assistant",
+        content: "Thinking...",
+      },
+    ]);
+
     try {
-      await fetch(webhookUrl, {
+      const response = await fetch(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        mode: "no-cors",
         body: JSON.stringify({
           message: text,
           source: "portfolio-chatbot",
@@ -66,16 +75,45 @@ export default function ChatbotWidget() {
         }),
       });
 
-      setMessages((m) => [
-        ...m,
-        {
-          role: "assistant",
-          content:
-            "Thanks! Your message was sent to the n8n workflow. Check your n8n execution history for delivery.",
-        },
-      ]);
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+        
+        // Update the last message with the actual response
+        setMessages((m) => {
+          const newMessages = [...m];
+          const lastMessage = newMessages[newMessages.length - 1];
+          if (lastMessage && lastMessage.role === "assistant" && lastMessage.content === "Thinking...") {
+            lastMessage.content = responseData.output || responseData.message || "I've received your message and will respond shortly.";
+          }
+          console.log(newMessages);
+          return newMessages;
+        });
+        
+      } else {
+        // Handle error response
+        setMessages((m) => {
+          const newMessages = [...m];
+          const lastMessage = newMessages[newMessages.length - 1];
+          if (lastMessage && lastMessage.role === "assistant" && lastMessage.content === "Thinking...") {
+            lastMessage.content = "Sorry, I encountered an error. Please try again later.";
+          }
+          return newMessages;
+        });
+      }
     } catch (err) {
       console.error(err);
+      
+      // Update the last message with error
+      setMessages((m) => {
+        const newMessages = [...m];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage && lastMessage.role === "assistant" && lastMessage.content === "Thinking...") {
+          lastMessage.content = "Sorry, I'm having trouble connecting right now. Please try again later.";
+        }
+        return newMessages;
+      });
+      
       toast({ title: "Error", description: "Failed to reach webhook.", variant: "destructive" });
     } finally {
       pendingRef.current = false;
@@ -111,17 +149,8 @@ export default function ChatbotWidget() {
           </div>
           {showSettings && (
             <div className="mt-2 grid gap-2">
-              <label htmlFor="webhook" className="text-sm text-muted-foreground">
-                n8n Webhook URL
-              </label>
-              <Input
-                id="webhook"
-                placeholder="https://your-n8n-host/webhook/xxxx"
-                value={webhookUrl}
-                onChange={(e) => setWebhookUrl(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">
-                Messages will be POSTed as JSON using no-cors mode. Configure your n8n webhook to accept JSON.
+              <p className="text-sm text-muted-foreground">
+                Webhook is configured and connected to n8n workflow. Messages will be automatically routed.
               </p>
             </div>
           )}

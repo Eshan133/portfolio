@@ -7,12 +7,18 @@ const certs = [
     year: "Nov 2024 - present",
     desc: " Modules taught: Data Science Principle, Data Visualization, Big Data Technology, Database System, Inferential Mathematics",
   },
-  // {
-  //   title: "AI Automation Freelancer",
-  //   institution: "Coursera, DeepLearning.AI, Stanford University",
-  //   year: "2024",
-  //   desc: "Tools used: n8n, sup",
-  // },
+  {
+    title: "AI Automation Freelancer",
+    institution: "Freelancing",
+    year: "May 2025 - present",
+    desc: "Projects: Meta messaging automation, Viral Content Finder, Portfolio Website with RAG chatbot, Landing page automation",
+  },
+  {
+    title: "Data Scientist",
+    institution: "Code Vatika",
+    year: "May 2023 - Nov 2024",
+    desc: "Responsibilities: – Data preparation, Exploratory Data Analysis (EDA), Feature Engineering, Model Development, Data Visualization",
+  },
 ];
 
 export default function Experiences() {
