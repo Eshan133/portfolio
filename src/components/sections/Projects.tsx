@@ -4,6 +4,13 @@ import { Github, ExternalLink } from "lucide-react";
 
 const projects = [
   {
+    title: "Multi-Modal Hate Speech Detection",
+    desc: "Classifies hate speech by combining text and image signals with transformer-based encoders.",
+    tech: ["NLP", "Vision", "Pytorch"],
+    github: "https://github.com/Eshan133/MultiModel-Hate-Speech-Detection.git",
+    demo: "#",
+  },
+  {
     title: "Transformer Implementation",
     desc: "Paper Implementation of Attention is All You Need paper along with notes",
     tech: ["Pytorch"],

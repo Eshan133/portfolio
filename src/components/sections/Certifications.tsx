@@ -1,17 +1,34 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-const certs = [
+type Certification = {
+  title: string;
+  issuer: string;
+  year: string;
+  desc: string;
+  link?: string;
+};
+
+const certs: Certification[] = [
   {
     title: "Deep Learning Specialization",
     issuer: "Coursera, DeepLearning.AI, Stanford University",
     year: "2025",
     desc: "Neural Networks and Deep Learning, Hyperparameter Tuning, Regularization and Optimization, Structuring Machine Learning Projects, Convolutional Neural Networks, Sequence Models",
+    link: "https://www.coursera.org/account/accomplishments/specialization/SWASUYS14Z36",
   },
   {
     title: "Machine Learning Specialization",
     issuer: "Coursera, DeepLearning.AI, Stanford University",
     year: "2024",
     desc: "Supervised Machine Learning: Regression and Classification, Advanced Learning Algorithm, Unsupervised Learning, Recommenders, Reinforcement Learning",
+    link: "https://www.coursera.org/account/accomplishments/specialization/ASKXCPHBBLXM",
+  },
+  {
+    title: "Oracle Cloud Infrastructure 2024 Certified Foundations Associate",
+    issuer: "Oracle University",
+    year: "2024",
+    desc: "Covers OCI core services, governance, security, networking, storage, and basic cloud architecture concepts.",
+    link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=81E8F1E936873B33E8F55432B141013C877C7A043CC2EA1996F4758C3910C930",
   },
 ];
 
@@ -28,11 +45,21 @@ export default function Certifications() {
             <CardHeader>
               <CardTitle className="text-xl">{c.title}</CardTitle>
               <CardDescription>
-                {c.issuer} • {c.year}
+                {c.issuer} | {c.year}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">{c.desc}</p>
+              {c.link && (
+                <a
+                  href={c.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block mt-3 text-sm font-medium text-primary hover:underline"
+                >
+                  View credential
+                </a>
+              )}
             </CardContent>
           </Card>
         ))}
