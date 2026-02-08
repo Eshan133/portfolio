@@ -1,0 +1,28 @@
+name: Deploy Portfolio
+
+on:
+  push:
+    branches:
+      - main  # Or 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Optional: If you use Angular/React, add build steps here:
+      # - name: Install Dependencies
+      #   run: npm install
+      # - name: Build Project
+      #   run: npm run build
+
+      - name: Deploy to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "." # Or "dist/" if you're using a build tool like Angular
+          target: "/var/www/portfolio"
