@@ -3,19 +3,25 @@ name: Deploy React Portfolio
 on:
   push:
     branches:
-      - main
+      - main  # Change to 'master' if your default branch is named master
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Matches a standard React environment
 
       - name: Install Dependencies
         run: npm install
 
-      - name: Build React App
+      - name: Build Project
         run: npm run build
 
       - name: Deploy to VPS
@@ -25,8 +31,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: "dist/" # If using Vite (common for modern React)
-          # source: "build/" # Use this if you are using Create React App (CRA)
+          # 'dist' is for Vite. If you use Create-React-App, change this to 'build'
+          source: "dist/" 
           target: "/var/www/portfolio"
-          strip_components: 1 # This prevents it from creating a /dist/ folder inside /portfolio
+          strip_components: 1 
           rm: true
